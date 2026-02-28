@@ -90,7 +90,15 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (!openaiResponse.ok) {
     const errorBody = await openaiResponse.text();
     console.error("OpenAI API error:", openaiResponse.status, errorBody);
-    return errorResponse("Image transformation failed. Please try again.", 502);
+    // Include upstream status to aid debugging
+    let detail = "";
+    try {
+      detail = ": " + errorBody.slice(0, 200);
+    } catch {}
+    return errorResponse(
+      `Image transformation failed (upstream ${openaiResponse.status})${detail}`,
+      502
+    );
   }
 
   const result = (await openaiResponse.json()) as {
