@@ -1,78 +1,141 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shave That Cat!</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/style.css">
-</head>
-<body>
-  <header>
-    <h1>Shave That Cat!</h1>
-    <p class="subtitle">Upload a cat photo. Get a Sphynx.</p>
-    <div class="badge" id="badge">
-      <span id="remaining">--</span> / <span id="total">50</span> shaves left today
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shave That Cat!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Shave That Cat!</h1>
+      <p class="subtitle">Upload a cat photo. Get a Sphynx.</p>
+      <div class="badge" id="badge">
+        <span id="remaining">--</span> / <span id="total">50</span> shaves left
+        today
+      </div>
+    </header>
+
+    <button id="about-btn" class="about-btn" aria-label="About & FAQ">?</button>
+
+    <div id="about-modal" class="about-modal" hidden>
+      <div class="about-modal-backdrop"></div>
+      <div class="about-modal-content">
+        <button id="about-close" class="about-close" aria-label="Close">
+          &times;
+        </button>
+        <h2>About</h2>
+        <p>
+          <strong>Shave That Cat!</strong> uses an image editing model
+          (currently
+          <a
+            href="https://developers.openai.com/api/docs/models/gpt-image-1"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GPT Image 1</a
+          >) to virtually shave your cat. This costs money, so the number of
+          times this website can be used per day is capped. It's a joke website
+          I made for my friends. Be cool.
+        </p>
+
+        <h3>FAQ</h3>
+        <dl class="faq-list">
+          <dt>Why?</dt>
+          <dd>Why not?</dd>
+
+          <dt>What happens to my photo?</dt>
+          <dd>
+            Your image is sent to OpenAI's image API for processing and is not
+            stored anywhere afterward.
+          </dd>
+
+          <dt>Does it work on dogs?</dt>
+          <dd>
+            The prompt is tailored for cats. I haven't tested it on images of
+            things that aren't cats. Use at your own risk.
+          </dd>
+
+          <dt>Were any cats harmed?</dt>
+          <dd>No. Just mildly embarrassed.</dd>
+        </dl>
+      </div>
     </div>
-  </header>
 
-  <main>
-    <!-- Upload Section -->
-    <section id="upload-section" class="section">
-      <div id="drop-zone" class="drop-zone">
-        <div class="drop-zone-content">
-          <div class="drop-icon">&#128049;</div>
-          <p>Drag & drop a cat photo here</p>
-          <p class="drop-or">or</p>
-          <label class="file-btn">
-            Choose File
-            <input type="file" id="file-input" accept="image/png,image/jpeg,image/webp" hidden>
-          </label>
+    <main>
+      <!-- Upload Section -->
+      <section id="upload-section" class="section">
+        <div id="drop-zone" class="drop-zone">
+          <div class="drop-zone-content">
+            <div class="drop-icon">&#128049;</div>
+            <p>Drag & drop a cat photo here</p>
+            <p class="drop-or">or</p>
+            <label class="file-btn">
+              Choose File
+              <input
+                type="file"
+                id="file-input"
+                accept="image/png,image/jpeg,image/webp"
+                hidden
+              />
+            </label>
+          </div>
+          <img id="preview" class="preview" alt="Preview" hidden />
+          <button id="clear-btn" class="clear-btn" hidden>&times;</button>
         </div>
-        <img id="preview" class="preview" alt="Preview" hidden>
-        <button id="clear-btn" class="clear-btn" hidden>&times;</button>
-      </div>
-      <button id="shave-btn" class="shave-btn" disabled>&#9986; SHAVE THAT CAT</button>
-    </section>
+        <button id="shave-btn" class="shave-btn" disabled>
+          &#9986; SHAVE THAT CAT
+        </button>
+      </section>
 
-    <!-- Loading Section -->
-    <section id="loading-section" class="section" hidden>
-      <div class="spinner"></div>
-      <p id="loading-msg" class="loading-msg">Warming up the clippers...</p>
-    </section>
+      <!-- Loading Section -->
+      <section id="loading-section" class="section" hidden>
+        <div class="spinner"></div>
+        <p id="loading-msg" class="loading-msg">Warming up the clippers...</p>
+      </section>
 
-    <!-- Result Section -->
-    <section id="result-section" class="section" hidden>
-      <div class="comparison">
-        <div class="comparison-card">
-          <h3>Before</h3>
-          <img id="before-img" alt="Before">
+      <!-- Result Section -->
+      <section id="result-section" class="section" hidden>
+        <div class="comparison">
+          <div class="comparison-card">
+            <h3>Before</h3>
+            <img id="before-img" alt="Before" />
+          </div>
+          <div class="comparison-arrow">&#10132;</div>
+          <div class="comparison-card">
+            <h3>After</h3>
+            <img id="after-img" alt="After" />
+          </div>
         </div>
-        <div class="comparison-arrow">&#10132;</div>
-        <div class="comparison-card">
-          <h3>After</h3>
-          <img id="after-img" alt="After">
+        <div class="result-actions">
+          <button id="download-btn" class="action-btn">
+            &#11015; Download
+          </button>
+          <button id="another-btn" class="action-btn shave-btn">
+            &#128049; Shave Another
+          </button>
         </div>
-      </div>
-      <div class="result-actions">
-        <button id="download-btn" class="action-btn">&#11015; Download</button>
-        <button id="another-btn" class="action-btn shave-btn">&#128049; Shave Another</button>
-      </div>
-    </section>
+      </section>
 
-    <!-- Error Section -->
-    <section id="error-section" class="section" hidden>
-      <p class="error-msg" id="error-msg"></p>
-      <button id="retry-btn" class="action-btn shave-btn">Try Again</button>
-    </section>
-  </main>
+      <!-- Error Section -->
+      <section id="error-section" class="section" hidden>
+        <p class="error-msg" id="error-msg"></p>
+        <button id="retry-btn" class="action-btn shave-btn">Try Again</button>
+      </section>
+    </main>
 
-  <footer>
-    <p>No cats were harmed in the making of this website. Just... mildly embarrassed.</p>
-  </footer>
+    <footer>
+      <p>
+        No cats were harmed in the making of this website. Just... mildly
+        embarrassed.
+      </p>
+    </footer>
 
-  <script src="/script.js"></script>
-</body>
+    <script src="/script.js"></script>
+  </body>
 </html>

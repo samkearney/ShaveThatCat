@@ -282,5 +282,29 @@ retryBtn.addEventListener("click", () => {
   }
 });
 
+// --- About Modal ---
+const aboutBtn = $<HTMLButtonElement>("#about-btn");
+const aboutModal = $<HTMLDivElement>("#about-modal");
+const aboutClose = $<HTMLButtonElement>("#about-close");
+const aboutBackdrop = aboutModal.querySelector<HTMLDivElement>(".about-modal-backdrop")!;
+
+aboutBtn.addEventListener("click", () => {
+  aboutModal.hidden = false;
+});
+
+aboutClose.addEventListener("click", () => {
+  aboutModal.hidden = true;
+});
+
+aboutBackdrop.addEventListener("click", () => {
+  aboutModal.hidden = true;
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !aboutModal.hidden) {
+    aboutModal.hidden = true;
+  }
+});
+
 // Init
 fetchStatus();
