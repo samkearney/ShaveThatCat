@@ -109,14 +109,19 @@ async function handleFile(file: File) {
   // Resize in background
   try {
     resizedBlob = await resizeImage(file, 1024);
-  } catch {
+  } catch (err) {
     resizedBlob = null; // Fall back to original
+    console.error("[shave] resize failed:", err);
   }
 
   // Check size after resize (original file used as fallback if resize failed)
   const finalSize = resizedBlob ? resizedBlob.size : file.size;
   if (finalSize > 10 * 1024 * 1024) {
-    showError("Image too large. Maximum size is 10MB.");
+    showError(
+      `Image too large (${(finalSize / 1024 / 1024).toFixed(1)}MB after resize). ` +
+      `Original: ${(file.size / 1024 / 1024).toFixed(1)}MB ${file.type}. ` +
+      `Resize ${resizedBlob ? "succeeded" : "failed"}.`
+    );
     clearFile();
     return;
   }
