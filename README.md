@@ -56,13 +56,11 @@ Compiles `src/script.ts` into `public/script.js` via esbuild.
 
 ## Deploy
 
-Set the production secret:
+### CI/CD (GitHub Actions)
 
-```bash
-npx wrangler pages secret put OPENAI_API_KEY
-```
+Pushes to `main` auto-deploy via `.github/workflows/deploy.yml`.
 
-Deploy:
+### Manual deploy
 
 ```bash
 npx wrangler pages deploy ./public
