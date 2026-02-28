@@ -437,4 +437,8 @@ footer {
   .comparison-card {
     width: 100%;
   }
+
+  #download-btn {
+    display: none;
+  }
 }
