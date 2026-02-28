@@ -10,6 +10,7 @@ const ALLOWED_TYPES = new Set([
   "image/jpeg",
   "image/webp",
 ]);
+const ALLOWED_SIZES = new Set(["1024x1024", "1024x1536", "1536x1024"]);
 
 const PROMPT = `Transform this cat to look like a hairless Sphynx cat. Remove all fur completely. Keep the cat's exact pose, expression, eye color, facial features, and background identical. The cat should have the characteristic wrinkled, bare skin of a Sphynx cat in a skin tone that matches the original cat's fur color. Keep whiskers if visible. The result should look like a realistic photo.`;
 
@@ -66,12 +67,19 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     );
   }
 
+  // Determine output size from client hint
+  const sizeParam = formData.get("size");
+  const size =
+    typeof sizeParam === "string" && ALLOWED_SIZES.has(sizeParam)
+      ? sizeParam
+      : "1024x1024";
+
   // Build OpenAI API request
   const openaiForm = new FormData();
   openaiForm.append("model", "gpt-image-1");
   openaiForm.append("image[]", file);
   openaiForm.append("prompt", PROMPT);
-  openaiForm.append("size", "1024x1024");
+  openaiForm.append("size", size);
   openaiForm.append("quality", "medium");
 
   let openaiResponse: Response;

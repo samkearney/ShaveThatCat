@@ -31,8 +31,11 @@ const LOADING_MESSAGES = [
   "Sweeping up the fur...",
 ];
 
+type ImageSize = "1024x1024" | "1024x1536" | "1536x1024";
+
 let selectedFile: File | null = null;
 let resizedBlob: Blob | null = null;
+let detectedSize: ImageSize = "1024x1024";
 let loadingInterval: ReturnType<typeof setInterval> | null = null;
 let isShaving = false;
 
@@ -48,11 +51,19 @@ async function fetchStatus() {
 }
 
 // --- Image Resize ---
+function detectSize(width: number, height: number): ImageSize {
+  const ratio = width / height;
+  if (ratio > 1.2) return "1536x1024"; // Landscape
+  if (ratio < 0.8) return "1024x1536"; // Portrait
+  return "1024x1024"; // Square
+}
+
 function resizeImage(file: File, maxDim: number): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
       let { width, height } = img;
+      detectedSize = detectSize(width, height);
       if (width > maxDim || height > maxDim) {
         const scale = maxDim / Math.max(width, height);
         width = Math.round(width * scale);
@@ -158,6 +169,7 @@ async function shave() {
   const blob = resizedBlob || selectedFile;
   const formData = new FormData();
   formData.append("image", blob, "cat.png");
+  formData.append("size", detectedSize);
 
   try {
     const res = await fetch("/api/shave", {
