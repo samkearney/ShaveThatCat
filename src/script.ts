@@ -19,6 +19,7 @@ const errorSection = $<HTMLElement>("#error-section");
 const errorMsg = $<HTMLParagraphElement>("#error-msg");
 const retryBtn = $<HTMLButtonElement>("#retry-btn");
 const remainingEl = $<HTMLSpanElement>("#remaining");
+const totalEl = $<HTMLSpanElement>("#total");
 
 const LOADING_MESSAGES = [
   "Warming up the clippers...",
@@ -45,8 +46,10 @@ async function fetchStatus() {
     const res = await fetch("/api/status");
     const data = (await res.json()) as { remaining: number; total: number };
     remainingEl.textContent = String(data.remaining);
+    totalEl.textContent = String(data.total);
   } catch {
     remainingEl.textContent = "?";
+    totalEl.textContent = "?";
   }
 }
 
@@ -119,8 +122,8 @@ async function handleFile(file: File) {
   if (finalSize > 10 * 1024 * 1024) {
     showError(
       `Image too large (${(finalSize / 1024 / 1024).toFixed(1)}MB after resize). ` +
-      `Original: ${(file.size / 1024 / 1024).toFixed(1)}MB ${file.type}. ` +
-      `Resize ${resizedBlob ? "succeeded" : "failed"}.`
+        `Original: ${(file.size / 1024 / 1024).toFixed(1)}MB ${file.type}. ` +
+        `Resize ${resizedBlob ? "succeeded" : "failed"}.`,
     );
     clearFile();
     return;
@@ -286,7 +289,9 @@ retryBtn.addEventListener("click", () => {
 const aboutBtn = $<HTMLButtonElement>("#about-btn");
 const aboutModal = $<HTMLDivElement>("#about-modal");
 const aboutClose = $<HTMLButtonElement>("#about-close");
-const aboutBackdrop = aboutModal.querySelector<HTMLDivElement>(".about-modal-backdrop")!;
+const aboutBackdrop = aboutModal.querySelector<HTMLDivElement>(
+  ".about-modal-backdrop",
+)!;
 
 aboutBtn.addEventListener("click", () => {
   aboutModal.hidden = false;
