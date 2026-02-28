@@ -90,10 +90,6 @@ async function handleFile(file: File) {
     showError("Please upload a PNG, JPEG, or WebP image.");
     return;
   }
-  if (file.size > 5 * 1024 * 1024) {
-    showError("Image too large. Maximum size is 5MB.");
-    return;
-  }
 
   selectedFile = file;
 
@@ -113,6 +109,14 @@ async function handleFile(file: File) {
     resizedBlob = await resizeImage(file, 1024);
   } catch {
     resizedBlob = null; // Fall back to original
+  }
+
+  // Check size after resize (original file used as fallback if resize failed)
+  const finalSize = resizedBlob ? resizedBlob.size : file.size;
+  if (finalSize > 5 * 1024 * 1024) {
+    showError("Image too large. Maximum size is 5MB.");
+    clearFile();
+    return;
   }
 }
 
