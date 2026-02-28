@@ -36,7 +36,7 @@ Run the full stack locally (static files + API functions + local KV):
 npx wrangler pages dev ./public
 ```
 
-This builds the frontend automatically via the `[build]` config in `wrangler.toml`. Local KV is stored in `.wrangler/state/` (SQLite). The only external call is to the OpenAI API.
+Run `npm run build` first (or use `npm run dev` in another terminal for auto-rebuild). Local KV is stored in `.wrangler/state/` (SQLite). The only external call is to the OpenAI API.
 
 For frontend-only iteration with auto-rebuild on change:
 
