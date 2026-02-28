@@ -75,8 +75,10 @@ function resizeImage(file: File, maxDim: number): Promise<Blob> {
       const ctx = canvas.getContext("2d")!;
       ctx.drawImage(img, 0, 0, width, height);
       canvas.toBlob(
-        (blob) => (blob ? resolve(blob) : reject(new Error("Canvas toBlob failed"))),
-        "image/png"
+        (blob) =>
+          blob ? resolve(blob) : reject(new Error("Canvas toBlob failed")),
+        "image/jpeg",
+        0.85,
       );
     };
     img.onerror = () => reject(new Error("Failed to load image"));
@@ -113,8 +115,8 @@ async function handleFile(file: File) {
 
   // Check size after resize (original file used as fallback if resize failed)
   const finalSize = resizedBlob ? resizedBlob.size : file.size;
-  if (finalSize > 5 * 1024 * 1024) {
-    showError("Image too large. Maximum size is 5MB.");
+  if (finalSize > 10 * 1024 * 1024) {
+    showError("Image too large. Maximum size is 10MB.");
     clearFile();
     return;
   }
@@ -172,7 +174,7 @@ async function shave() {
 
   const blob = resizedBlob || selectedFile;
   const formData = new FormData();
-  formData.append("image", blob, "cat.png");
+  formData.append("image", blob, "cat.jpg");
   formData.append("size", detectedSize);
 
   try {

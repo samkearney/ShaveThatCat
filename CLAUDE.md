@@ -37,7 +37,7 @@ wrangler.toml          → Cloudflare Pages config + KV binding
 **Backend (`functions/api/shave.ts`)**:
 
 - Accepts multipart/form-data with an `image` field
-- Validates file type (PNG/JPEG/WebP) and size (5MB max)
+- Validates file type (PNG/JPEG/WebP) and size (10MB max)
 - Rate limit via KV key `shave-count:YYYY-MM-DD` with 86400s TTL
 - Forwards to OpenAI image edit API, returns base64 result
 - Note: KV counter has a read-then-write race condition under concurrent requests; acceptable for a low-traffic joke site

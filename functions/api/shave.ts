@@ -4,7 +4,7 @@ interface Env {
 }
 
 const DAILY_LIMIT = 50;
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = new Set([
   "image/png",
   "image/jpeg",
@@ -54,7 +54,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   // Validate file size
   if (file.size > MAX_FILE_SIZE) {
-    return errorResponse("Image too large. Maximum size is 5MB.", 400);
+    return errorResponse("Image too large. Maximum size is 10MB.", 400);
   }
 
   // Rate limit check
