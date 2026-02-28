@@ -75,6 +75,10 @@ main {
   align-items: center;
 }
 
+.section[hidden] {
+  display: none;
+}
+
 /* Drop Zone */
 .drop-zone {
   position: relative;

@@ -34,6 +34,7 @@ const LOADING_MESSAGES = [
 let selectedFile: File | null = null;
 let resizedBlob: Blob | null = null;
 let loadingInterval: ReturnType<typeof setInterval> | null = null;
+let isShaving = false;
 
 // --- Status ---
 async function fetchStatus() {
@@ -148,7 +149,8 @@ function showError(msg: string) {
 
 // --- Shave! ---
 async function shave() {
-  if (!selectedFile) return;
+  if (!selectedFile || isShaving) return;
+  isShaving = true;
 
   showSection("loading");
   startLoadingMessages();
@@ -184,6 +186,8 @@ async function shave() {
     showSection("result");
   } catch {
     showError("Network error. Please check your connection and try again.");
+  } finally {
+    isShaving = false;
   }
 }
 

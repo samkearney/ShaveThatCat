@@ -7,4 +7,4 @@ command = "npm run build"
 
 [[kv_namespaces]]
 binding = "SHAVE_KV"
-id = "YOUR_KV_NAMESPACE_ID_HERE"
+id = "f00538ccfd7c4e53a9d61da5a92cc043"
