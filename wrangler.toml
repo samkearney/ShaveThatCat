@@ -1,0 +1,10 @@
+name = "shavethatcat"
+compatibility_date = "2024-12-30"
+pages_build_output_dir = "./public"
+
+[build]
+command = "npm run build"
+
+[[kv_namespaces]]
+binding = "SHAVE_KV"
+id = "YOUR_KV_NAMESPACE_ID_HERE"
